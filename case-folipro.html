@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folipro — платформа поддержки проектного обучения · Мария Савельева</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --storm-01: #fcfdfd;
+    --storm-02: #f6f8f9;
+    --storm-03: #e0e7eb;
+    --storm-05: #9ab0bc;
+    --storm-09: #2f3f46;
+    --storm-11: #0a0e0f;
+
+    --accent: #2ad5c6;
+    --accent-deep: #13625c;
+    --accent-ink: #0c3c37;
+    --accent-tint: #d4f7f4;
+    --accent-tint-strong: #aaeee9;
+
+    --text: var(--storm-11);
+    --muted: rgba(10, 14, 15, 0.56);
+    --muted2: rgba(10, 14, 15, 0.36);
+
+    --glass: rgba(255, 255, 255, 0.55);
+    --glass-strong: rgba(255, 255, 255, 0.78);
+    --glass-border: rgba(255, 255, 255, 0.7);
+    --shadow: 0 14px 40px rgba(19, 98, 92, 0.10);
+    --shadow-sm: 0 6px 18px rgba(19, 98, 92, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--storm-02);
+    color: var(--text);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .aurora { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .aurora span { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; }
+  .aurora span:nth-child(1) {
+    width: 620px; height: 620px; top: -220px; left: -160px;
+    background: radial-gradient(circle, var(--accent-tint-strong), transparent 70%);
+  }
+  .aurora span:nth-child(2) {
+    width: 520px; height: 520px; top: 30%; right: -180px;
+    background: radial-gradient(circle, var(--accent-tint), transparent 70%);
+    opacity: 0.4;
+  }
+  .aurora span:nth-child(3) {
+    width: 480px; height: 480px; bottom: -200px; left: 20%;
+    background: radial-gradient(circle, var(--storm-05), transparent 72%);
+    opacity: 0.22;
+  }
+
+  .glass {
+    background: linear-gradient(155deg, var(--glass-strong), var(--glass));
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .shell { max-width: 980px; margin: 0 auto; padding: 40px 32px 100px; }
+
+  /* NAV */
+  .case-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 32px; animation: rise 0.5s ease both;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 500;
+    padding: 11px 20px; border-radius: 999px; transition: all 0.2s ease;
+  }
+  .back-link:hover { color: var(--accent-deep); transform: translateX(-2px); }
+
+  /* HERO */
+  .hero { border-radius: 32px; padding: 44px; margin-bottom: 20px; animation: rise 0.6s 0.05s ease both; }
+  .hero .eyebrow { font-size: 12px; color: var(--accent-deep); font-weight: 500; margin-bottom: 14px; display: block; }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 16px; }
+  .hero .lead { font-size: 17px; color: var(--text); max-width: 640px; margin-bottom: 26px; }
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .meta-chip {
+    font-size: 12.5px; color: var(--muted); background: rgba(10,14,15,0.04);
+    padding: 8px 16px; border-radius: 14px;
+  }
+  .meta-chip b { color: var(--text); font-weight: 500; }
+
+  /* SECTION */
+  section { margin-bottom: 20px; animation: rise 0.6s ease both; }
+  .panel { border-radius: 28px; padding: 36px; }
+  .section-label { font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block; }
+  h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 14px; }
+  h3 { font-size: 17px; font-weight: 500; margin-bottom: 8px; }
+  p.body-text { font-size: 15.5px; color: var(--text); margin-bottom: 12px; }
+  p.body-text:last-child { margin-bottom: 0; }
+  p.body-text b { font-weight: 500; color: var(--accent-ink); }
+
+  /* FEATURE GRID */
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .feature-card {
+    border-radius: 22px; padding: 24px; background: rgba(10,14,15,0.03);
+  }
+  .feature-card h3 { color: var(--accent-deep); }
+  .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+
+  /* CONTRIBUTION LIST */
+  .contrib-list { list-style: none; }
+  .contrib-list li {
+    position: relative; padding-left: 26px; margin-bottom: 12px; font-size: 15px; color: var(--text);
+  }
+  .contrib-list li:last-child { margin-bottom: 0; }
+  .contrib-list li::before {
+    content: ''; position: absolute; left: 0; top: 8px;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  }
+
+  /* CASE UNIVERSITIES */
+  .uni-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .uni-tag {
+    font-size: 12.5px; padding: 8px 14px; border-radius: 12px;
+    background: var(--accent-tint); color: var(--accent-ink); font-weight: 500;
+  }
+
+  /* IMAGE FRAME */
+  .shot {
+    border-radius: 20px; overflow: hidden; border: 1px solid rgba(10,14,15,0.06);
+    box-shadow: var(--shadow-sm); margin: 20px 0;
+  }
+  .shot img { width: 100%; display: block; }
+  .shot-caption { font-size: 12.5px; color: var(--muted); margin-top: -10px; margin-bottom: 20px; text-align: center; }
+
+  .shot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .shot-row .shot { margin: 0; }
+
+  .shot-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
+
+  /* SCENARIO CARD */
+  .scenario {
+    border-radius: 22px; padding: 26px; background: rgba(10,14,15,0.03); margin-bottom: 14px;
+  }
+  .scenario:last-child { margin-bottom: 0; }
+  .scenario .num { font-size: 12px; color: var(--accent-deep); font-weight: 500; margin-bottom: 6px; display: block; }
+  .scenario h3 { margin-bottom: 10px; }
+  .scenario p { font-size: 14.5px; color: var(--muted); line-height: 1.6; }
+  .scenario p b { color: var(--text); font-weight: 500; }
+
+  /* PROBLEM / SOLUTION */
+  .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .ps-card { border-radius: 20px; padding: 22px; }
+  .ps-card.problem { background: rgba(220, 90, 60, 0.06); }
+  .ps-card.solution { background: var(--accent-tint); }
+  .ps-card .ps-label { font-size: 11px; font-weight: 500; margin-bottom: 8px; display: block; }
+  .ps-card.problem .ps-label { color: #b0503a; }
+  .ps-card.solution .ps-label { color: var(--accent-ink); }
+  .ps-card p { font-size: 14px; color: var(--text); }
+
+  /* MOBILE GALLERY */
+  .mobile-gallery { display: flex; gap: 14px; overflow-x: auto; padding: 6px 2px 16px; scrollbar-width: thin; }
+  .mobile-gallery .shot { flex: 0 0 220px; margin: 0; }
+
+  /* CLOSING */
+  .closing { text-align: center; padding: 50px 30px; }
+  .closing h2 { margin-bottom: 12px; }
+  .closing p { color: var(--muted); font-size: 15px; max-width: 480px; margin: 0 auto 24px; }
+  .closing-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .cta-pill {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font-size: 13px; font-weight: 500; padding: 12px 24px; border-radius: 999px;
+    transition: transform 0.2s ease;
+  }
+  .cta-pill.primary { background: var(--accent); color: var(--accent-ink); }
+  .cta-pill.secondary { color: var(--accent-deep); }
+  .cta-pill:hover { transform: translateY(-2px); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 760px) {
+    .shell { padding: 24px 16px 70px; }
+    .hero { padding: 28px; }
+    .panel { padding: 24px; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .shot-row, .shot-row-3 { grid-template-columns: 1fr; }
+    .ps-grid { grid-template-columns: 1fr; }
+    .meta-row { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora"><span></span><span></span><span></span></div>
+
+<div class="shell">
+
+  <nav class="case-nav">
+    <a class="back-link glass" href="index (1).html">← Всё портфолио</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero glass">
+    <span class="eyebrow">Веб-платформа · Продуктовый дизайн · UX-анализ</span>
+    <h1>Folipro — платформа поддержки проектного обучения</h1>
+    <p class="lead">Сервис, который связывает студентов, кураторов и индустриальных партнёров вокруг реальных проектов: биржа вакансий, витрина проектов, аналитика и поэтапное управление процессом.</p>
+    <div class="meta-row">
+      <span class="meta-chip"><b>Роль:</b> UX/UI дизайнер</span>
+      <span class="meta-chip"><b>Формат:</b> стажировка в проекте от вуза</span>
+      <span class="meta-chip"><b>Инструменты:</b> Figma</span>
+    </div>
+  </div>
+
+  <!-- FUNCTIONAL -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Функционал платформы</span>
+      <h2>Четыре модуля одной экосистемы</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Биржа</h3>
+          <p>Поиск вакансий, работа с заявками, распределение ролей в проекте.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Витрина</h3>
+          <p>Упорядоченная демонстрация паспортов проектов, поиск, умная навигация.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Аналитика</h3>
+          <p>Отслеживание показателей, действий студентов и наставников, управление на основе данных.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Управление</h3>
+          <p>Поэтапная работа над проектом, трекинг процесса, аудит изменений.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASES -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Где внедрено</span>
+      <h2>Кейсы применения</h2>
+      <p class="body-text">Платформа тестировалась и внедрялась в нескольких вузах на реальных студенческих проектах с индустриальными заказчиками.</p>
+      <div class="uni-list">
+        <span class="uni-tag">РУТ (МИИТ)</span>
+        <span class="uni-tag">Альметьевский государственный нефтяной институт</span>
+        <span class="uni-tag">Северо-Кавказский федеральный университет</span>
+        <span class="uni-tag">и другие</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MY CONTRIBUTION -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Мой вклад</span>
+      <h2>Что делала я</h2>
+      <ul class="contrib-list">
+        <li>Работа с обширной готовой дизайн-системой.</li>
+        <li>Построение пользовательских путей для четырёх ролей платформы.</li>
+        <li>Анализ необходимого функционала для управления созданием и редактированием проектов со стороны разных пользователей — и его реализация.</li>
+        <li>Правка уже существующих сущностей интерфейса.</li>
+        <li>Создание новых решений с учётом потребностей пользователей.</li>
+        <li>Работа с b2c-системой: дизайн не только для пользователей платформы, но и «внутренний» — для кураторов и координаторов проектов.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SCENARIO 1: ADMIN STAGES -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Сценарий №1</span>
+      <h2>Путь администратора: создание этапов</h2>
+      <p class="body-text">При создании нового проекта администратор устанавливает глобальные этапы работы. Для проектов, длящихся не один семестр, требуется каждый раз создавать этапы заново — этот процесс можно оптимизировать, предоставив два пути действий: создать оригинальный этап или скопировать этапы предыдущего семестра с предварительным просмотром.</p>
+      <p class="body-text">Таким образом я <b>уменьшила временные затраты</b> на выполнение повторяющихся задач, а также <b>снизила вероятность ошибок</b> при вводе. Автоматизация рутинных процессов приносит бизнесу экономическую выгоду.</p>
+
+      <div class="shot">
+        <img src="img/Путь администратора.png" alt="Экран этапов проекта — глобальные и локальные карточки">
+      </div>
+      <p class="shot-caption">Карточки этапов: глобальные и локальные, с переворотом по нажатию на иконку info</p>
+    </div>
+  </section>
+
+  <!-- ENTITY CARD FLIP -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Деталь интерфейса</span>
+      <h2>Карточка этапа с двумя состояниями</h2>
+      <p class="body-text">Чтобы не перегружать сетку текстом, описание этапа скрыто за иконкой информации — по клику карточка переворачивается и показывает подробности со скроллом.</p>
+      <div class="shot-row">
+        <div>
+          <div class="shot"><img src="img/сущность карточки.png" alt="Лицевая сторона карточки этапа"></div>
+          <p class="shot-caption">Лицевая сторона</p>
+        </div>
+        <div>
+          <div class="shot"><img src="img/сущность карточки обратная сторона.png" alt="Обратная сторона карточки этапа с описанием"></div>
+          <p class="shot-caption">Обратная сторона — описание</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENARIO 2: EDIT PATH / TEAM -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Сценарий №2</span>
+      <h2>Путь администратора: редактирование и команда</h2>
+      <p class="body-text">Сценарий описывает все возможные пути взаимодействия админа с окном редактирования проекта. После наполнения проекта этапами админу доступна страница редактирования, где можно продолжить создание этапов или изменить характеристики существующих.</p>
+      <p class="body-text">Этот же сценарий подходит для тимлида — он обладает теми же возможностями, кроме редактирования глобальных этапов. Тимлид назначает ответственного за задачу, тот — ответственного за подзадачу. Исполнитель выставляет процент выполнения и отправляет результат на согласование, вышестоящий проверяет и подтверждает.</p>
+
+      <div class="shot">
+        <img src="img/куратор тултип.png" alt="Карточки команды с мультиролевым тултипом и переворотом успеваемости">
+      </div>
+      <p class="shot-caption">Карточка куратора, мультиролевой тултип и перевёрнутая карточка успеваемости</p>
+    </div>
+  </section>
+
+  <!-- GANTT -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Визуализация процесса</span>
+      <h2>Диаграмма Ганта для отслеживания сроков</h2>
+      <p class="body-text">Участник, не получивший задач, может просматривать этапы работы. Отдельный график внизу страницы наглядно показывает длительность выполнения этапов и задач — при наведении на шкалу или нажатии на этап в списке появляется тултип с деталями.</p>
+      <div class="shot">
+        <img src="img/Graph.png" alt="Диаграмма Ганта с тултипом задачи и ответственным">
+      </div>
+      <p class="shot-caption">Тултип задачи с ответственным и процентом выполнения</p>
+    </div>
+  </section>
+
+  <!-- OTHER SCENARIOS -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Сценарии №3–4</span>
+      <h2>Ответственный за подзадачу и участник проекта</h2>
+      <div class="scenario">
+        <span class="num">Сценарий 3</span>
+        <h3>Путь ответственного за подзадачу</h3>
+        <p>Пользователь может выставлять процент выполнения и сохранять результат для проверки другим членом команды.</p>
+      </div>
+      <div class="scenario">
+        <span class="num">Сценарий 4</span>
+        <h3>Путь участника проекта</h3>
+        <p>Участник, прошедший регистрацию, но не получивший задач, может просматривать этапы работы и график их выполнения в наглядном виде.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTERS PROBLEM/SOLUTION -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">UX-проблема</span>
+      <h2>Фильтры в Витрине проектов</h2>
+      <div class="ps-grid">
+        <div class="ps-card problem">
+          <span class="ps-label">Проблема</span>
+          <p>В панели фильтров все значения были представлены единым набором — непонятно, к какому формату обучения относится запись «курс 1», «курс 2», если проект актуален и для бакалавриата, и для магистратуры.</p>
+        </div>
+        <div class="ps-card solution">
+          <span class="ps-label">Решение</span>
+          <p>Раскрывающаяся панель активных фильтров, где значения сгруппированы по категориям, а запись изменена на понятную — например, «Бакалавриат: курс 1».</p>
+        </div>
+      </div>
+
+      <div class="shot-row">
+        <div>
+          <div class="shot"><img src="img/фильтры до.png" alt="Фильтры до редизайна"></div>
+          <p class="shot-caption">До — плоский список чекбоксов</p>
+        </div>
+        <div>
+          <div class="shot"><img src="img/фильтр раскрыт.png" alt="Фильтры после редизайна, раскрытая панель"></div>
+          <p class="shot-caption">После — сгруппированная панель активных фильтров</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Процесс</span>
+      <h2>Построение пользовательских путей</h2>
+      <p class="body-text">Каждый сценарий проходил через построение подробного userflow — от точки входа до всех развилок и модальных состояний, — чтобы не упустить редкие кейсы взаимодействия и заранее договориться с командой о логике переходов.</p>
+      <div class="shot">
+        <img src="img/Путь ответственного за подзадачу.png" alt="Userflow-диаграмма сценария добавления этапов">
+      </div>
+      <p class="shot-caption">Фрагмент userflow-диаграммы: сценарий добавления этапов</p>
+    </div>
+  </section>
+
+  <!-- MOBILE -->
+  <section>
+    <div class="panel glass">
+      <span class="section-label">Адаптация</span>
+      <h2>Мобильная версия</h2>
+      <p class="body-text">Все ключевые сценарии — карточки этапов, диаграмма Ганта с тултипами, раскрывающиеся фильтры — перенесены на мобильный экран без потери функциональности.</p>
+      <div class="mobile-gallery">
+        <div class="shot"><img src="img//Мобайл экран 1.png" alt="Мобильная версия — этапы"></div>
+        <div class="shot"><img src="img//Мобайл экран 2.png" alt="Мобильная версия — тултип задачи на Ганте"></div>
+        <div class="shot"><img src="img//Мобайл экран 3.png" alt="Мобильная версия — раскрытые фильтры"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <div class="closing glass" style="border-radius: 32px;">
+    <h2>Спасибо за внимание</h2>
+    <p>Если хотите обсудить проект или узнать больше о процессе работы — буду рада пообщаться.</p>
+    <div class="closing-links">
+      <a class="cta-pill primary" href="http://t.me/smashach" target="_blank">Написать в Telegram</a>
+      <a class="cta-pill secondary glass" href="index.html">← Вернуться в портфолио</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
