@@ -99,6 +99,7 @@
     padding: 8px 16px; border-radius: 14px;
   }
   .meta-chip b { color: var(--text); font-weight: 500; }
+  .zoom-note { font-size: 12.5px; color: var(--muted2); margin-top: 16px; }
 
   /* SECTION */
   section { margin-bottom: 20px; animation: rise 0.6s ease both; }
@@ -138,14 +139,15 @@
 
   /* IMAGE FRAME */
   .shot {
-    border-radius: 20px; overflow: hidden; border: 1px solid rgba(10,14,15,0.06);
+    position: relative; border-radius: 20px; overflow: hidden; border: 1px solid rgba(10,14,15,0.06);
     box-shadow: var(--shadow-sm); margin: 20px 0;
   }
-  .shot img { width: 100%; display: block; }
+  .shot img { width: 100%; display: block; cursor: zoom-in; transition: transform 0.3s ease; }
+  .shot:hover img { transform: scale(1.015); }
   .shot-caption { font-size: 12.5px; color: var(--muted); margin-top: -10px; margin-bottom: 20px; text-align: center; }
 
   .shot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-  .shot-row .shot { margin: 0; }
+  .shot-row .shot { margin: 0 0 20px; }
 
   .shot-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
 
@@ -170,8 +172,8 @@
   .ps-card p { font-size: 14px; color: var(--text); }
 
   /* MOBILE GALLERY */
-  .mobile-gallery { display: flex; gap: 14px; overflow-x: auto; padding: 6px 2px 16px; scrollbar-width: thin; }
-  .mobile-gallery .shot { flex: 0 0 220px; margin: 0; }
+  .mobile-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: start; }
+  .mobile-gallery .shot { margin: 0; }
 
   /* CLOSING */
   .closing { text-align: center; padding: 50px 30px; }
@@ -187,6 +189,34 @@
   .cta-pill.secondary { color: var(--accent-deep); }
   .cta-pill:hover { transform: translateY(-2px); }
 
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 999; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(8, 11, 12, 0.92); backdrop-filter: blur(4px);
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-stage {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; touch-action: none;
+  }
+  .lightbox-stage img {
+    max-width: 92vw; max-height: 86vh; transform-origin: 0 0;
+    user-select: none; -webkit-user-drag: none; cursor: zoom-in;
+  }
+  .lightbox-stage.zoomed img { cursor: grab; }
+  .lightbox-stage.grabbing img { cursor: grabbing; }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.12); color: #fff; font-size: 22px; line-height: 1;
+    cursor: pointer; transition: background 0.2s ease; z-index: 2;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.22); }
+  .lightbox-hint {
+    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.55); font-size: 12.5px; white-space: nowrap;
+  }
+
   @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
   @media (max-width: 760px) {
@@ -195,8 +225,10 @@
     .panel { padding: 24px; }
     .feature-grid { grid-template-columns: 1fr; }
     .shot-row, .shot-row-3 { grid-template-columns: 1fr; }
+    .mobile-gallery { grid-template-columns: repeat(2, 1fr); }
     .ps-grid { grid-template-columns: 1fr; }
     .meta-row { gap: 8px; }
+    .lightbox-hint { display: none; }
   }
 </style>
 </head>
@@ -212,14 +244,15 @@
 
   <!-- HERO -->
   <div class="hero glass">
-    <span class="eyebrow">Веб-платформа · Продуктовый дизайн · UX-анализ</span>
-    <h1>Folipro — платформа поддержки проектного обучения</h1>
+    <!--<span class="eyebrow">Веб-платформа · Продуктовый дизайн · UX-анализ</span>-->
+    <h1>Folipro. Платформа поддержки проектного обучения</h1>
     <p class="lead">Сервис, который связывает студентов, кураторов и индустриальных партнёров вокруг проектной деятельности: биржа вакансий, витрина проектов, аналитика и поэтапное управление процессом.</p>
     <div class="meta-row">
       <span class="meta-chip"><b>Роль:</b> UX/UI дизайнер</span>
-      <span class="meta-chip"><b>Формат:</b> стажировка в стартапе</span>
-      <span class="meta-chip"><b>Инструменты:</b> Figma</span>
+      <span class="meta-chip"><b>Формат:</b> работа в стартапе</span>
+      <span class="meta-chip"><b>Инструменты:</b> Figma, Miro </span>
     </div>
+    <p class="zoom-note">Все скриншоты в кейсе кликабельны. Нажмите на любой, чтобы разглядеть детали.</p>
   </div>
 
   <!-- FUNCTIONAL -->
@@ -269,12 +302,12 @@
       <span class="section-label">Мой вклад</span>
       <h2>Что делала я</h2>
       <ul class="contrib-list">
-        <li>Работа с обширной готовой дизайн-системой.</li>
+        <li>Работа с обширной дизайн-системой.</li>
         <li>Построение пользовательских путей для четырёх ролей платформы.</li>
-        <li>Анализ необходимого функционала для управления созданием и редактированием проектов со стороны разных пользователей — и его реализация.</li>
+        <li>Анализ необходимого функционала для управления созданием и редактированием проектов со стороны разных пользователей.</li>
         <li>Правка уже существующих сущностей интерфейса.</li>
         <li>Создание новых решений с учётом потребностей пользователей.</li>
-        <li>Работа с b2c-системой с разных сторон: дизайн не только для пользователей платформы, но и «внутренний» — для кураторов (панель администратора).</li>
+        <li>Работа с b2c-системой с разных сторон: дизайн не только для пользователей платформы, но и для кураторов (панель администратора).</li>
       </ul>
     </div>
   </section>
@@ -284,13 +317,12 @@
     <div class="panel glass">
       <span class="section-label">Сценарий №1</span>
       <h2>Путь администратора: создание этапов</h2>
-      <p class="body-text">При создании нового проекта администратор устанавливает глобальные этапы работы. Для проектов, длящихся не один семестр, требуется каждый раз создавать этапы заново — этот процесс можно оптимизировать, предоставив два пути действий: создать оригинальный этап или скопировать этапы предыдущего семестра с предварительным просмотром.</p>
+      <p class="body-text">При создании нового проекта администратор устанавливает глобальные этапы работы. Для проектов, длящихся не один семестр, требуется каждый раз создавать этапы заново. Этот процесс можно оптимизировать, предоставив два пути действий: создать оригинальный этап или скопировать этапы предыдущего семестра с предварительным просмотром.</p>
       <p class="body-text">Таким образом я <b>уменьшила временные затраты</b> на выполнение повторяющихся задач, а также <b>снизила вероятность ошибок</b> при вводе. Автоматизация рутинных процессов приносит бизнесу экономическую выгоду.</p>
 
       <div class="shot">
         <img src="img/Путь администратора.png" alt="Экран этапов проекта — глобальные и локальные карточки">
       </div>
-      <p class="shot-caption">Карточки этапов: глобальные и локальные, с переворотом по нажатию на иконку info</p>
     </div>
   </section>
 
@@ -299,7 +331,7 @@
     <div class="panel glass">
       <span class="section-label">Деталь интерфейса</span>
       <h2>Карточка этапа с двумя состояниями</h2>
-      <p class="body-text">Чтобы не перегружать сетку текстом, описание этапа скрыто за иконкой информации — по клику карточка переворачивается и показывает подробности со скроллом.</p>
+      <p class="body-text">Чтобы не перегружать панель текстом, описание этапа скрыто за иконкой информации. По клику карточка переворачивается и показывает подробности со скроллом.</p>
       <div class="shot-row">
         <div>
           <div class="shot"><img src="img/сущность карточки.png" alt="Лицевая сторона карточки этапа"></div>
@@ -307,7 +339,7 @@
         </div>
         <div>
           <div class="shot"><img src="img/сущность карточки обратная сторона.png" alt="Обратная сторона карточки этапа с описанием"></div>
-          <p class="shot-caption">Обратная сторона — описание</p>
+          <p class="shot-caption">Обратная</p>
         </div>
       </div>
     </div>
@@ -319,12 +351,12 @@
       <span class="section-label">Сценарий №2</span>
       <h2>Путь администратора: редактирование и команда</h2>
       <p class="body-text">Сценарий описывает все возможные пути взаимодействия админа с окном редактирования проекта. После наполнения проекта этапами админу доступна страница редактирования, где можно продолжить создание этапов или изменить характеристики существующих.</p>
-      <p class="body-text">Этот же сценарий подходит для тимлида — он обладает теми же возможностями, кроме редактирования глобальных этапов. Тимлид назначает ответственного за задачу, тот — ответственного за подзадачу. Исполнитель выставляет процент выполнения и отправляет результат на согласование, вышестоящий проверяет и подтверждает.</p>
+      <p class="body-text">Этот же сценарий подходит для тимлида, он обладает теми же возможностями, кроме редактирования глобальных этапов. Тимлид назначает ответственного за задачу, а тот, в свою очередь, ответственного за подзадачу. Исполнитель выставляет процент выполнения и отправляет результат на согласование, вышестоящий проверяет и подтверждает.</p>
 
-      <div class="shot">
-        <img src="img/куратор тултип.png" alt="Карточки команды с мультиролевым тултипом и переворотом успеваемости">
+      <div class="shot" style="aspect-ratio: 2.36;">
+        <img src="img/Frame 240.png" alt="Карточки команды с мультиролевым тултипом и переворотом успеваемости" style="height: 100%; object-fit: cover; object-position: center;">
       </div>
-      <p class="shot-caption">Карточка куратора, мультиролевой тултип и перевёрнутая карточка успеваемости</p>
+      <p class="shot-caption">Может быть несколько ролей</p>
     </div>
   </section>
 
@@ -333,18 +365,18 @@
     <div class="panel glass">
       <span class="section-label">Визуализация процесса</span>
       <h2>Диаграмма Ганта для отслеживания сроков</h2>
-      <p class="body-text">Участник, не получивший задач, может просматривать этапы работы. Отдельный график внизу страницы наглядно показывает длительность выполнения этапов и задач — при наведении на шкалу или нажатии на этап в списке появляется тултип с деталями.</p>
+      <p class="body-text">Любой участник, может просматривать этапы работы. Отдельный график показывает их длительность. При наведении на шкалу или нажатии на цвет в списке появляется тултип с деталями.</p>
       <div class="shot">
         <img src="img/Graph.png" alt="Диаграмма Ганта с тултипом задачи и ответственным">
       </div>
-      <p class="shot-caption">Тултип задачи с ответственным и процентом выполнения</p>
+      <!--<p class="shot-caption">Тултип задачи с ответственным и процентом выполнения</p>-->
     </div>
   </section>
 
   <!-- OTHER SCENARIOS -->
   <section>
     <div class="panel glass">
-      <span class="section-label">Сценарии №3–4</span>
+      <span class="section-label">Сценарии №3,4</span>
       <h2>Ответственный за подзадачу и участник проекта</h2>
       <div class="scenario">
         <span class="num">Сценарий 3</span>
@@ -363,26 +395,26 @@
   <section>
     <div class="panel glass">
       <span class="section-label">UX-проблема</span>
-      <h2>Фильтры в Витрине проектов</h2>
+      <h2>Фильтры в витрине проектов</h2>
       <div class="ps-grid">
         <div class="ps-card problem">
           <span class="ps-label">Проблема</span>
-          <p>В панели фильтров все значения были представлены единым набором — непонятно, к какому формату обучения относится запись «курс 1», «курс 2», если проект актуален и для бакалавриата, и для магистратуры.</p>
+          <p>В панели фильтров все значения были представлены единым набором, то есть непонятно, к какому формату обучения относится запись «курс 1», «курс 2», если проект актуален и для бакалавриата, и для магистратуры.</p>
         </div>
         <div class="ps-card solution">
           <span class="ps-label">Решение</span>
-          <p>Раскрывающаяся панель активных фильтров, где значения сгруппированы по категориям, а запись изменена на понятную — например, «Бакалавриат: курс 1».</p>
+          <p>Раскрывающаяся панель активных фильтров, где значения сгруппированы по категориям, а запись изменена на понятную, например: «Бакалавриат: курс 1».</p>
         </div>
       </div>
 
       <div class="shot-row">
         <div>
           <div class="shot"><img src="img/фильтры до.png" alt="Фильтры до редизайна"></div>
-          <p class="shot-caption">До — плоский список чекбоксов</p>
+          <p class="shot-caption">До: плоский список чекбоксов</p>
         </div>
         <div>
           <div class="shot"><img src="img/фильтр раскрыт.png" alt="Фильтры после редизайна, раскрытая панель"></div>
-          <p class="shot-caption">После — сгруппированная панель активных фильтров</p>
+          <p class="shot-caption">После: сгруппированная панель активных фильтров</p>
         </div>
       </div>
     </div>
@@ -392,12 +424,12 @@
   <section>
     <div class="panel glass">
       <span class="section-label">Процесс</span>
-      <h2>Построение пользовательских путей</h2>
-      <p class="body-text">Каждый сценарий проходил через построение подробного userflow — от точки входа до всех развилок и модальных состояний, — чтобы не упустить редкие кейсы взаимодействия и заранее договориться с командой о логике переходов.</p>
+      <h2>Построение Юзерфлоу</h2>
+      <p class="body-text">Каждый сценарий был подробно построен от точки входа до всех развилок и модальных состояний, чтобы не упустить редкие кейсы взаимодействия и обсудить с командой логику переходов.</p>
       <div class="shot">
         <img src="img/Путь ответственного за подзадачу.png" alt="Userflow-диаграмма сценария добавления этапов">
       </div>
-      <p class="shot-caption">Фрагмент userflow-диаграммы: сценарий добавления этапов</p>
+      <p class="shot-caption">Участник хочет отметить процент выполнения задачи</p>
     </div>
   </section>
 
@@ -406,11 +438,12 @@
     <div class="panel glass">
       <span class="section-label">Адаптация</span>
       <h2>Мобильная версия</h2>
-      <p class="body-text">Все ключевые сценарии — карточки этапов, диаграмма Ганта с тултипами, раскрывающиеся фильтры — перенесены на мобильный экран без потери функциональности.</p>
+      <p class="body-text">Все ключевые сценарии: карточки этапов, диаграмма Ганта с тултипами, раскрывающиеся фильтры перенесены на мобильный экран без потери функциональности.</p>
       <div class="mobile-gallery">
         <div class="shot"><img src="img/Mobile 1.png" alt="Мобильная версия — этапы"></div>
         <div class="shot"><img src="img/Mobile 2.png" alt="Мобильная версия — тултип задачи на Ганте"></div>
         <div class="shot"><img src="img/Mobile 3.png" alt="Мобильная версия — раскрытые фильтры"></div>
+        <div class="shot"><img src="img/Mobile 4.png" alt="Мобильная версия — раскрытые фильтры"></div>
       </div>
     </div>
   </section>
@@ -418,7 +451,7 @@
   <!-- CLOSING -->
   <div class="closing glass" style="border-radius: 32px;">
     <h2>Спасибо за внимание</h2>
-    <p>Если хотите обсудить проект или узнать больше о процессе работы — буду рада пообщаться.</p>
+    <p>Если хотите обсудить проект или узнать больше о процессе работы, буду рада пообщаться.</p>
     <div class="closing-links">
       <a class="cta-pill primary" href="http://t.me/smashach" target="_blank">Написать в Telegram</a>
       <a class="cta-pill secondary glass" href="index.html">← Вернуться в портфолио</a>
@@ -426,6 +459,132 @@
   </div>
 
 </div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть">×</button>
+  <div class="lightbox-stage" id="lightboxStage">
+    <img id="lightboxImg" src="" alt="">
+  </div>
+</div>
+
+<script>
+(function () {
+  var lightbox = document.getElementById('lightbox');
+  var stage = document.getElementById('lightboxStage');
+  var img = document.getElementById('lightboxImg');
+  var closeBtn = document.getElementById('lightboxClose');
+
+  var MIN_SCALE = 1, MAX_SCALE = 6;
+  var scale = 1, tx = 0, ty = 0;
+  var panning = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
+  var pinchStartDist = 0, pinchStartScale = 1;
+
+  function apply() {
+    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+    stage.classList.toggle('zoomed', scale > 1.01);
+  }
+
+  function resetView() { scale = 1; tx = 0; ty = 0; apply(); }
+
+  function open(src, alt) {
+    img.src = src;
+    img.alt = alt || '';
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    resetView();
+  }
+
+  function close() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.querySelectorAll('.shot img').forEach(function (el) {
+    el.addEventListener('click', function () { open(el.src, el.alt); });
+  });
+
+  closeBtn.addEventListener('click', close);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('open')) close();
+  });
+
+  function zoomAt(clientX, clientY, factor) {
+    var rect = stage.getBoundingClientRect();
+    var x = clientX - rect.left, y = clientY - rect.top;
+    var newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * factor));
+    if (newScale === scale) return;
+    tx = x - (x - tx) * (newScale / scale);
+    ty = y - (y - ty) * (newScale / scale);
+    scale = newScale;
+    if (scale === MIN_SCALE) { tx = 0; ty = 0; }
+    apply();
+  }
+
+  stage.addEventListener('wheel', function (e) {
+    if (!lightbox.classList.contains('open')) return;
+    e.preventDefault();
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.15 : 1 / 1.15);
+  }, { passive: false });
+
+  stage.addEventListener('dblclick', function (e) {
+    zoomAt(e.clientX, e.clientY, scale > 1.5 ? (1 / scale) : 2.5);
+  });
+
+  stage.addEventListener('mousedown', function (e) {
+    if (scale <= 1) return;
+    panning = true;
+    startX = e.clientX; startY = e.clientY; startTx = tx; startTy = ty;
+    stage.classList.add('grabbing');
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (!panning) return;
+    tx = startTx + (e.clientX - startX);
+    ty = startTy + (e.clientY - startY);
+    apply();
+  });
+  window.addEventListener('mouseup', function () {
+    panning = false;
+    stage.classList.remove('grabbing');
+  });
+
+  function touchDist(t0, t1) {
+    var dx = t0.clientX - t1.clientX, dy = t0.clientY - t1.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  stage.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 1 && scale > 1) {
+      panning = true;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+      startTx = tx; startTy = ty;
+    } else if (e.touches.length === 2) {
+      panning = false;
+      pinchStartDist = touchDist(e.touches[0], e.touches[1]);
+      pinchStartScale = scale;
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchmove', function (e) {
+    if (e.touches.length === 1 && panning) {
+      tx = startTx + (e.touches[0].clientX - startX);
+      ty = startTy + (e.touches[0].clientY - startY);
+      apply();
+    } else if (e.touches.length === 2) {
+      e.preventDefault();
+      var dist = touchDist(e.touches[0], e.touches[1]);
+      var target = Math.min(MAX_SCALE, Math.max(MIN_SCALE, pinchStartScale * (dist / pinchStartDist)));
+      var midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      var midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      zoomAt(midX, midY, target / scale);
+    }
+  }, { passive: false });
+
+  stage.addEventListener('touchend', function () { panning = false; });
+})();
+</script>
 
 </body>
 </html>
