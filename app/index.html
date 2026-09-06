@@ -133,10 +133,17 @@
   /* ABOUT — bento of glass panels */
   .about-grid {
     display: grid;
-    grid-template-columns: 1.1fr 1.6fr 1.3fr;
+    grid-template-columns: 1.1fr 2.6fr;
     gap: 16px;
     margin-bottom: 16px;
     animation: rise 0.6s 0.06s ease both;
+  }
+
+  .about-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 16px;
   }
 
   .about-photo {
@@ -169,7 +176,8 @@
   }
 
   .about-bio { justify-content: flex-start; }
-  .about-bio p {
+  .about-edu-panel { justify-content: flex-start; }
+  .about-bio p, .about-edu-panel p {
     font-size: clamp(17px, 1.8vw, 20px);
     font-weight: 400;
     line-height: 1.6;
@@ -183,7 +191,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 28px;
   }
 
   .tag {
@@ -337,6 +344,60 @@
   }
   .card:hover .card-badge { opacity: 1; }
 
+  /* ART GRID — Моё творчество */
+  .art-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px; align-items: start;
+  }
+  .art-card {
+    border-radius: 26px; overflow: hidden; cursor: zoom-in;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+  }
+  .art-card:hover { transform: translateY(-6px); box-shadow: 0 20px 46px rgba(19, 98, 92, 0.16); }
+  .art-card img {
+    width: 100%; display: block; transition: transform 0.4s ease;
+  }
+  .art-card:hover img { transform: scale(1.05); }
+
+  .art-card-group { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .art-card-group img { aspect-ratio: 1/1; object-fit: cover; }
+
+  .art-card.art-video { cursor: default; }
+  .art-card video { width: 100%; display: block; }
+
+  .art-caption { font-size: 12.5px; color: var(--muted); margin-top: 10px; text-align: center; }
+
+  .art-group-block { grid-column: 1 / -1; }
+  .art-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 999; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(8, 11, 12, 0.92); backdrop-filter: blur(4px);
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-stage {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; touch-action: none;
+  }
+  .lightbox-stage img {
+    max-width: 92vw; max-height: 86vh; transform-origin: 0 0;
+    user-select: none; -webkit-user-drag: none; cursor: zoom-in;
+  }
+  .lightbox-stage.zoomed img { cursor: grab; }
+  .lightbox-stage.grabbing img { cursor: grabbing; }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.12); color: #fff; font-size: 22px; line-height: 1;
+    cursor: pointer; transition: background 0.2s ease; z-index: 2;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.22); }
+  .lightbox-hint {
+    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.55); font-size: 12.5px; white-space: nowrap;
+  }
+
   @keyframes rise {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
@@ -358,6 +419,7 @@
     header { flex-direction: column; align-items: flex-start; gap: 14px; }
 
     .about-grid { grid-template-columns: 1fr; }
+    .about-2x2 { grid-template-columns: 1fr; }
     .about-photo { min-height: 220px; }
     .about-photo img { object-position: center 30%; }
     .glass-panel { padding: 24px; }
@@ -369,6 +431,11 @@
 
     .grid { grid-template-columns: 1fr; }
     .card-badge { opacity: 1; }
+    .lightbox-hint { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    .art-pair { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -392,34 +459,41 @@
       <img src="img/фото для портфолио.jpg" alt="Мария Савельева">
     </div>
 
-    <div class="glass-panel glass about-bio">
-      <span class="label">О себе</span>
-      <p>UX/UI дизайнер из Москвы. Разрабатываю дизайн веб-сайтов и приложений от макетов до запуска в прод. Работаю в Figma и Tilda.<br>Опыт 2+ лет.</p>
-    </div>
+    <div class="about-2x2">
+      <div class="glass-panel glass about-edu-panel">
+        <span class="label">Образование</span>
+        <p>Выпускной курс Московского Политехнического университета, факультет информационных систем и технологий в медиаиндустрии.</p>
+      </div>
 
-    <div class="glass-panel skills-panel glass">
-      <span class="label">Инструменты и навыки</span>
-      <div class="skill-tags">
-        <span class="tag accent">Figma</span>
-        <span class="tag accent">Tilda</span>
-        <span class="tag">E-commerce</span>
-        <span class="tag">Грамотное написание текстов</span>
-        <span class="tag">Знание HTML, CSS, JS</span>
-        <span class="tag">B2B, B2C</span>
-        <span class="tag">GitHub</span>
-      </div>
-      <!--
-      <div class="stats-row">
-        <div>
-          <span class="stat-num">8</span>
-          <span class="stat-lbl">проектов</span>
-        </div>
-        <div>
-          <span class="stat-num">2</span>
-          <span class="stat-lbl">инструмента</span>
+      <div class="glass-panel skills-panel glass">
+        <span class="label">Инструменты и навыки</span>
+        <div class="skill-tags">
+          <span class="tag accent">Figma</span>
+          <span class="tag accent">Tilda</span>
+          <span class="tag">E-commerce</span>
+          <span class="tag">Грамотные тексты</span>
+          <span class="tag">Знание HTML, CSS, JS</span>
+          <span class="tag">B2B, B2C</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">UX-аудит</span>
+          <span class="tag">Прототипы</span>
         </div>
       </div>
-      -->
+
+      <div class="glass-panel glass about-bio">
+        <span class="label">О себе</span>
+        <p>UX/UI дизайнер из Москвы. Разрабатываю дизайн веб-сайтов и приложений от макетов до запуска в прод. Работаю в Figma и Tilda.</p>
+      </div>
+
+      <div class="glass-panel skills-panel glass">
+        <span class="label">Опыт и курсы</span>
+        <div class="skill-tags">
+          <span class="tag accent">2+ года</span>
+          <span class="tag">Курс по 3D — РТУ МИРЭА</span>
+          <span class="tag">Курс HTML/CSS — Технологический колледж №34</span>
+          <span class="tag">UI-кит для игр</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -432,10 +506,13 @@
   <div class="tabs-wrap">
     <nav class="folders-nav glass">
       <div class="folder-tab active" onclick="switchTab('websites', this)">
-        Веб-сайты <span class="tab-count">5</span>
+        Веб-сайты
       </div>
       <div class="folder-tab" onclick="switchTab('landings', this)">
-        Учебные проекты <span class="tab-count">4</span>
+        Учебные проекты
+      </div>
+      <div class="folder-tab" onclick="switchTab('creativity', this)">
+        Моё творчество
       </div>
     </nav>
 
@@ -563,8 +640,55 @@
       </div>
     </div>
 
+    <!-- CREATIVITY -->
+    <div class="panel" id="panel-creativity">
+      <div class="panel-desc">В личных проектах нейронки не использую</div>
+      <div class="art-grid">
+      <div class="art-card glass"><img src="img/Shrek.jpg" alt="Пиксель-арт: портрет Шрека"></div>
+
+      <div>
+        <div class="art-card glass"><img src="img/Sibur.jpg" alt="3D-рендер лабораторного стекла"></div>
+        <p class="art-caption">3D-рендер</p>
+      </div>
+
+      <div>
+        <div class="art-card art-card-group glass">
+          <img src="img/pak 1.jpg" alt="Стикер лягушки в тёмных очках">
+          <img src="img/pak 2.jpg" alt="Стикер улыбающейся лягушки">
+          <img src="img/pak 3.jpg" alt="Стикер лягушки с сердечками">
+          <img src="img/pak 4.jpg" alt="Стикер подмигивающей лягушки">
+        </div>
+        <p class="art-caption">Стикерпак для Telegram</p>
+      </div>
+
+      <div class="art-group-block">
+        <div class="art-pair">
+          <div>
+            <div class="art-card glass"><img src="img/skver 1.jpg" alt="3D-рендер благоустройства сквера с фонтаном"></div>
+          </div>
+          <div>
+            <div class="art-card glass"><img src="img/skver 2.jpg" alt="3D-рендер детской площадки"></div>
+          </div>
+        </div>
+
+        <div class="art-card art-video glass">
+          <video src="img/tracking.mp4" controls preload="metadata"></video>
+        </div>
+      </div>
+    </div>
   </div>
 
+  </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть">×</button>
+  <div class="lightbox-stage" id="lightboxStage">
+    <img id="lightboxImg" src="" alt="">
+  </div>
+  <div class="lightbox-hint">Колесо / щипок — зум · перетаскивание — панорама · двойной клик — быстрый зум · Esc — закрыть</div>
 </div>
 
 <script>
@@ -574,6 +698,122 @@
     el.classList.add('active');
     document.getElementById('panel-' + name).classList.add('active');
   }
+
+  (function () {
+    var lightbox = document.getElementById('lightbox');
+    var stage = document.getElementById('lightboxStage');
+    var img = document.getElementById('lightboxImg');
+    var closeBtn = document.getElementById('lightboxClose');
+
+    var MIN_SCALE = 1, MAX_SCALE = 6;
+    var scale = 1, tx = 0, ty = 0;
+    var panning = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
+    var pinchStartDist = 0, pinchStartScale = 1;
+
+    function apply() {
+      img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+      stage.classList.toggle('zoomed', scale > 1.01);
+    }
+
+    function resetView() { scale = 1; tx = 0; ty = 0; apply(); }
+
+    function open(src, alt) {
+      img.src = src;
+      img.alt = alt || '';
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      resetView();
+    }
+
+    function close() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      img.src = '';
+    }
+
+    document.querySelectorAll('.art-card img').forEach(function (el) {
+      el.addEventListener('click', function () { open(el.src, el.alt); });
+    });
+
+    closeBtn.addEventListener('click', close);
+    lightbox.addEventListener('click', function (e) { if (e.target === lightbox) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) close();
+    });
+
+    function zoomAt(clientX, clientY, factor) {
+      var rect = stage.getBoundingClientRect();
+      var x = clientX - rect.left, y = clientY - rect.top;
+      var newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * factor));
+      if (newScale === scale) return;
+      tx = x - (x - tx) * (newScale / scale);
+      ty = y - (y - ty) * (newScale / scale);
+      scale = newScale;
+      if (scale === MIN_SCALE) { tx = 0; ty = 0; }
+      apply();
+    }
+
+    stage.addEventListener('wheel', function (e) {
+      if (!lightbox.classList.contains('open')) return;
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.15 : 1 / 1.15);
+    }, { passive: false });
+
+    stage.addEventListener('dblclick', function (e) {
+      zoomAt(e.clientX, e.clientY, scale > 1.5 ? (1 / scale) : 2.5);
+    });
+
+    stage.addEventListener('mousedown', function (e) {
+      if (scale <= 1) return;
+      panning = true;
+      startX = e.clientX; startY = e.clientY; startTx = tx; startTy = ty;
+      stage.classList.add('grabbing');
+    });
+    window.addEventListener('mousemove', function (e) {
+      if (!panning) return;
+      tx = startTx + (e.clientX - startX);
+      ty = startTy + (e.clientY - startY);
+      apply();
+    });
+    window.addEventListener('mouseup', function () {
+      panning = false;
+      stage.classList.remove('grabbing');
+    });
+
+    function touchDist(t0, t1) {
+      var dx = t0.clientX - t1.clientX, dy = t0.clientY - t1.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    stage.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 1 && scale > 1) {
+        panning = true;
+        startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+        startTx = tx; startTy = ty;
+      } else if (e.touches.length === 2) {
+        panning = false;
+        pinchStartDist = touchDist(e.touches[0], e.touches[1]);
+        pinchStartScale = scale;
+      }
+    }, { passive: true });
+
+    stage.addEventListener('touchmove', function (e) {
+      if (e.touches.length === 1 && panning) {
+        tx = startTx + (e.touches[0].clientX - startX);
+        ty = startTy + (e.touches[0].clientY - startY);
+        apply();
+      } else if (e.touches.length === 2) {
+        e.preventDefault();
+        var dist = touchDist(e.touches[0], e.touches[1]);
+        var target = Math.min(MAX_SCALE, Math.max(MIN_SCALE, pinchStartScale * (dist / pinchStartDist)));
+        var midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        var midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        zoomAt(midX, midY, target / scale);
+      }
+    }, { passive: false });
+
+    stage.addEventListener('touchend', function () { panning = false; });
+  })();
 </script>
 </body>
 </html>
